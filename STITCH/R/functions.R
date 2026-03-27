@@ -161,7 +161,8 @@ STITCH <- function(
     output_haplotype_dosages = FALSE,
     use_bx_tag = TRUE,
     bxTagUpperLimit = 50000,
-    do_phasing = FALSE
+    do_phasing = FALSE,
+    keep_first_n_haps_constant = 0 #HACK
 ) {
 
     ## capture command line
@@ -261,6 +262,27 @@ STITCH <- function(
 
 
     validate_phasing(do_phasing, S)
+
+    ### HACK validation
+    if (!is.numeric(keep_first_n_haps_constant) ||
+        keep_first_n_haps_constant != round(keep_first_n_haps_constant) ||
+        keep_first_n_haps_constant < 0 ||
+        keep_first_n_haps_constant > K) {
+            stop("keep_first_n_haps_constant must be an integer between 0 and K")
+        }
+    
+    ### check user disabled shuffleHaplotypeIterations
+    if (keep_first_n_haps_constant > 0) {
+        if (is.na(shuffleHaplotypeIterations[1]) == FALSE) {
+            stop(paste0(
+                "Shuffling must be disabled. Please disable by setting shuffleHaplotypeIterations=NA "
+            ))
+        }
+    }
+    
+    ###
+
+
 
     ##
     ##
@@ -656,7 +678,14 @@ STITCH <- function(
                 )
             }
             ## perform switchover here
-            eHapsCurrent_tc <- eHapsFuture_tc
+            ### HACK
+            if (keep_first_n_haps_constant == 0){
+                eHapsCurrent_tc <- eHapsFuture_tc
+            } else if (keep_first_n_haps_constant < K) {
+                eHapsCurrent_tc[(keep_first_n_haps_constant + 1):K, , 1] <- 
+                    eHapsFuture_tc[(keep_first_n_haps_constant + 1):K, , 1]
+            }
+            ###
             alphaMatCurrent_tc <- alphaMatFuture_tc
             sigmaCurrent_m <- sigmaFuture_m
             priorCurrent_m <- priorFuture_m
