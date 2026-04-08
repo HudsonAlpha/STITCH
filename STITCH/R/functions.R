@@ -77,6 +77,7 @@
 #' @param use_bx_tag Whether to try and use BX tag in same to indicate that reads come from the same underlying molecule
 #' @param bxTagUpperLimit When using BX tag, at what distance between reads to consider reads with the same BX tag to come from different molecules
 #' @param do_phasing Whether to try and output phasing (experimental)
+#' @param keep_n_haps_constant Number of haplotypes to keep constant (excludes them from the EM update)
 #' @return Results in properly formatted version
 #' @author Robert Davies
 #' @export
