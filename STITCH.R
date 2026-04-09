@@ -474,7 +474,7 @@ option_list <- list(
         default = FALSE
     ),
     make_option(
-        "--keep_n_haps_constant",
+        "--keep_first_n_haps_constant",
         type = "integer",
         help = "Number of haplotypes to keep constant/exclude from EM updates [default 0] ",
         default = 0
@@ -563,5 +563,5 @@ STITCH(
     use_bx_tag = opt$use_bx_tag,
     bxTagUpperLimit = opt$bxTagUpperLimit,
     do_phasing = opt$do_phasing,
-    keep_n_haps_constant = opt$keep_n_haps_constant
+    keep_first_n_haps_constant = opt$keep_first_n_haps_constant
 )
